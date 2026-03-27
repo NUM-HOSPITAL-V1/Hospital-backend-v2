@@ -24,9 +24,11 @@ export const createUserUseCases = () => {
     password,
     phoneNumber,
   }) => {
-    if (!email || !password) throw createError("Имэйл/нууц үг шаардлагатай!", 400);
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!normalizedEmail || !password)
+      throw createError("Имэйл/нууц үг шаардлагатай!", 400);
 
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) throw createError("Имэйл бүртгэгдсэн байна!", 409);
 
     const hashedPassword = await hashPassword(password);
@@ -34,7 +36,7 @@ export const createUserUseCases = () => {
     const admin = await createAdmin({
       firstname,
       lastname,
-      email,
+      email: normalizedEmail,
       phoneNumber,
       password_hash: hashedPassword, // ✅
     });
@@ -46,9 +48,11 @@ export const createUserUseCases = () => {
   };
 
   const login = async ({ email, password }) => {
-    if (!email || !password) throw createError("Имэйл/нууц үг шаардлагатай!", 400);
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!normalizedEmail || !password)
+      throw createError("Имэйл/нууц үг шаардлагатай!", 400);
 
-    const user = await findUserByEmail(email);
+    const user = await findUserByEmail(normalizedEmail);
 
     if (!user) throw createError("Hereglegch oldsongui!", 401);
     console.log("keys:", Object.keys(user.toObject?.() ?? user));
@@ -84,9 +88,11 @@ export const createUserUseCases = () => {
     phoneNumber,
     specialization,
   }) => {
-    if (!email || !password) throw createError("Имэйл/нууц үг шаардлагатай!", 400);
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!normalizedEmail || !password)
+      throw createError("Имэйл/нууц үг шаардлагатай!", 400);
 
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) throw createError("Имэйл бүртгэгдсэн байна!", 409);
 
     const hashedPassword = await hashPassword(password);
@@ -94,7 +100,7 @@ export const createUserUseCases = () => {
     const staff = await createMedicalStaff({
       firstname,
       lastname,
-      email,
+      email: normalizedEmail,
       phoneNumber,
       password_hash: hashedPassword, // ✅
       specialization,
@@ -116,9 +122,11 @@ export const createUserUseCases = () => {
     phoneNumber,
     specialization,
   }) => {
-    if (!email || !password) throw createError("Имэйл/нууц үг шаардлагатай!", 400);
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!normalizedEmail || !password)
+      throw createError("Имэйл/нууц үг шаардлагатай!", 400);
 
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) throw createError("Имэйл бүртгэгдсэн байна!", 409);
 
     const hashedPassword = await hashPassword(password);
@@ -126,7 +134,7 @@ export const createUserUseCases = () => {
     const staff = await createMedicalStaff({
       firstname,
       lastname,
-      email,
+      email: normalizedEmail,
       phoneNumber,
       password_hash: hashedPassword, // ✅
       specialization,
@@ -156,9 +164,11 @@ export const createUserUseCases = () => {
     birthOfDate,
     gender,
   }) => {
-    if (!email || !password) throw createError("Имэйл/нууц үг шаардлагатай!", 400);
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!normalizedEmail || !password)
+      throw createError("Имэйл/нууц үг шаардлагатай!", 400);
 
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) throw createError("Имэйл бүртгэгдсэн байна!", 409);
 
     const hashedPassword = await hashPassword(password);
@@ -166,7 +176,7 @@ export const createUserUseCases = () => {
     const patient = await createPatient({
       firstname,
       lastname,
-      email,
+      email: normalizedEmail,
       phoneNumber,
       password_hash: hashedPassword, // ✅
       type,

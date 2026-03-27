@@ -1,4 +1,5 @@
 import { createPatientUseCases } from "../../application/use_cases/patientUseCases.js";
+import { createExaminationUseCases } from "../../application/use_cases/examinationUseCases.js";
 import { toPublicPatient } from "../../utils/formatter.js";
 import { createError } from "../../utils/error.js";
 import { patientUpdateSchema } from "../../utils/validators.js";
@@ -9,6 +10,8 @@ const {
   getPatient, 
   removePatient ,
 } = createPatientUseCases();
+
+const { getPatientExaminations } = createExaminationUseCases();
 
 //buh uwchtung jagsaah
 
@@ -100,6 +103,23 @@ export const getOwnExaminations = async (req, res) => {
     return res
       .status(500)
       .json({ error: "Үзлэгийн түүх авахад алдаа гарлаа!" });
+  }
+};
+
+export const getOwnProfile = async (req, res) => {
+  try {
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      patient: toPublicPatient(patient),
+    });
+  } catch (error) {
+    console.error("Error fetching own profile:", error);
+    return res.status(500).json({ error: "Профайл авахад алдаа гарлаа!" });
   }
 };
 

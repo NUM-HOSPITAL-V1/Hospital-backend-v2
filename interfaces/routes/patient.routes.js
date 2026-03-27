@@ -1,6 +1,7 @@
 import {
   deletePatientById,
   getOwnExaminations,
+  getOwnProfile,
   getPatientById,
   listAllPatients,
   updatePatientById,
@@ -45,6 +46,13 @@ router.get(
   authenticateJWT,
   authorizeRole(["Patient"]),
   getOwnExaminations
+);
+
+router.get(
+  "/profile",
+  authenticateJWT,
+  authorizeRole(["Patient"]),
+  getOwnProfile
 );
 
 
