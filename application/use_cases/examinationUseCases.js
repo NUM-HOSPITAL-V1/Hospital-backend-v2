@@ -3,6 +3,7 @@ import {
   findExaminationById,
   updateExaminationById,
   deleteExaminationById,
+  listAllExaminations,
   listPatientExaminations,
   listMedicalStaffExaminations,
 } from "../../infrastructure/repositories/examinationRepository.js";
@@ -80,6 +81,12 @@ export const createExaminationUseCases = () => {
     const examinations = await listPatientExaminations(patientId, filters);
     return examinations;
   };
+
+  const getAllExaminations = async (filters = {}) => {
+    const examinations = await listAllExaminations(filters);
+    return examinations;
+  };
+
   const getMedicalStaffExaminations = async (staffId, filters = {}) => {
     const examinations = await listMedicalStaffExaminations(staffId, filters);
     return examinations;
@@ -90,6 +97,7 @@ export const createExaminationUseCases = () => {
     getExamination,
     updateExamination,
     removeExamination,
+    getAllExaminations,
     getPatientExaminations,
     getMedicalStaffExaminations,
   };

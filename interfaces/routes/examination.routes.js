@@ -3,6 +3,7 @@ import { authenticateJWT, authorizeRole } from "../middleware/auth.js";
 
 import {
   createExamination,
+  getAllExaminationList,
   getMedicalStaffExamHistory,
   updateExaminationById,
   getExaminationById,
@@ -21,21 +22,9 @@ router.post(
 );
 
 router.get(
-  "/:id",
+  "/list/all",
   authorizeRole(["MedicalStaff", "Admin"]),
-  getExaminationById
-);
-
-router.put(
-  "/:id", 
-  authorizeRole(["MedicalStaff"]), 
-  updateExaminationById
-);
-
-router.delete(
-  "/:id",
-  authorizeRole(["MedicalStaff"]),
-  deleteExaminationById
+  getAllExaminationList
 );
 
 // Get all examinations for a specific patient
@@ -65,6 +54,24 @@ router.get(
   authenticateJWT,
   authorizeRole(["Patient"]),
   getExaminationDiagnosisList
+);
+
+router.get(
+  "/:id",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  getExaminationById
+);
+
+router.put(
+  "/:id", 
+  authorizeRole(["MedicalStaff"]), 
+  updateExaminationById
+);
+
+router.delete(
+  "/:id",
+  authorizeRole(["MedicalStaff"]),
+  deleteExaminationById
 );
 
 export default router;

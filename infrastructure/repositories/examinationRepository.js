@@ -32,6 +32,13 @@ export const listPatientExaminations = async (patientId, filters = {}) => {
     .sort({ exam_date: -1 }); // Sort by examination date, most recent first
 };
 
+export const listAllExaminations = async (filters = {}) => {
+  return await Examination.find(filters)
+    .populate("medicalStaff", "firstname lastname position specialization")
+    .populate("patient", "firstname lastname register sisiID")
+    .sort({ exam_date: -1 });
+};
+
 export const listMedicalStaffExaminations = async (staffId, filters = {}) => {
   const query = { medicalStaff: staffId, ...filters };
 

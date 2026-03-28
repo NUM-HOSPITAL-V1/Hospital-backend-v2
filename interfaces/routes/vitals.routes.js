@@ -46,8 +46,54 @@ router.get(
 );
 
 router.get(
-  "/vitalsigns/:id",
+  "/patient/:patientId/vitalsigns",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  getPatientVitalSignsList
+);
+
+router.get(
+  "/patient/:patientId/vitalsigns/latest",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  getPatientLatestVitalSigns
+);
+
+router.get(
+  "/patient/:patientId/vitalsigns/daterange",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  getPatientVitalSignsByDateRange
+);
+
+router.get(
+  "/vitalsigns/my/recorded",
   authorizeRole(["MedicalStaff"]),
+  getMyVitalSignsByStaff
+);
+
+router.get(
+  "/vitalsigns/my/daterange",
+  authorizeRole(["Patient"]),
+  (req, res, next) => {
+    req.params.patientId = req.user.id;
+    next();
+  },
+  getPatientVitalSignsByDateRange
+);
+
+router.get(
+  "/vitalsigns/my/latest",
+  authorizeRole(["Patient"]),
+  getMyLatestVitalSigns
+);
+
+router.get(
+  "/vitalsigns/my/recorded",
+  authorizeRole(["Patient"]),
+  getMyVitalSigns
+);
+
+router.get(
+  "/vitalsigns/:id",
+  authorizeRole(["MedicalStaff", "Patient"]),
   getVitalSignsById
 );
 
@@ -61,55 +107,6 @@ router.delete(
   "/vitalsigns/:id",
   authorizeRole(["MedicalStaff"]),
   deleteVitalSignsById
-);
-
-router.get(
-  "/patient/:patientId/vitalsigns",
-  authorizeRole(["MedicalStaff"]),
-  getPatientVitalSignsList
-);
-
-router.get(
-  "/patient/:patientId/vitalsigns/latest",
-  authorizeRole(["MedicalStaff"]),
-  getPatientLatestVitalSigns
-);
-
-router.get(
-  "/patient/:patientId/vitalsigns/daterange",
-  authorizeRole(["MedicalStaff"]),
-  getPatientVitalSignsByDateRange
-);
-
-router.get(
-  "/vitalsigns/my/recorded",
-  authorizeRole(["MedicalStaff"]),
-  getMyVitalSignsByStaff
-);
-
-router.get(
-  "/vitalsigns/my/latest",
-  authorizeRole(["Patient"]),
-  getMyLatestVitalSigns
-);
-
-//VITAL SIGNS
-router.get("/vitalsigns/:id", authorizeRole(["Patient"]), getVitalSignsById);
-
-router.get(
-  "/vitalsigns/my/recorded",
-  authorizeRole(["Patient"]),
-  getMyVitalSigns
-);
-
-router.get(
-  "/vitalsigns/my/daterange",
-  authorizeRole(["Patient"]),
-  (req, res, next) => {
-    req.params.patientId = req.user.id;
-    next();
-  },
-  getPatientVitalSignsByDateRange
 );
 
 router.post(

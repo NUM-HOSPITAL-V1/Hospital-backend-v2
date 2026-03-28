@@ -16,5 +16,23 @@ export const createAdmin = async (adminData) => {
   return await Admin.create(adminData);
 };
 export const findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+  const baseUser = await User.findOne({ email });
+
+  if (!baseUser) {
+    return null;
+  }
+
+  if (baseUser.role === "MedicalStaff") {
+    return await MedicalStaff.findById(baseUser._id);
+  }
+
+  if (baseUser.role === "Patient") {
+    return await Patient.findById(baseUser._id);
+  }
+
+  if (baseUser.role === "Admin") {
+    return await Admin.findById(baseUser._id);
+  }
+
+  return baseUser;
 };

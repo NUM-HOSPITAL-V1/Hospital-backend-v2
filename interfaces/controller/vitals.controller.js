@@ -1,6 +1,10 @@
 import { createVitalSignsUseCases } from "../../application/use_cases/vitalSignsUseCases.js";
 import VitalSigns from "../../domain/models/Vital.model.js";
-import { vitalSignsSchema } from "../../utils/validators.js";
+import {
+  vitalSignsSchema,
+  vitalSignsUpdateSchema,
+  dateRangeSchema,
+} from "../../utils/validators.js";
 
 
 //VITAL SIGNS
@@ -17,15 +21,16 @@ const {
 
 export const createVitalSigns = async (req, res) => {
   try {
-    const { patientId, vital_signs } = req.body;
-    // Add the medical staff ID from authenticated user
+    const { patientId, patient, vital_signs, ...flatVitalSigns } = req.body;
+    const resolvedPatientId = patientId || patient;
+
     const vitalSignsData = {
-      ...vital_signs,
-      patient: patientId,          // 👈 From frontend
+      ...(vital_signs || flatVitalSigns),
+      patient: resolvedPatientId,
       medicalStaff: req.user.id,
     };
 
-    if (!patientId) {
+    if (!resolvedPatientId) {
       return res.status(400).json({ error: 'Patient ID is missing' });
     }
 

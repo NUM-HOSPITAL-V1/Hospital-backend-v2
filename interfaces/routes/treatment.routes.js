@@ -25,27 +25,6 @@ router.post(
   createTreatment
 );
 
-// Get treatment by ID
-router.get(
-  "/:id",
-  authorizeRole(["MedicalStaff", "Admin", "Patient"]),
-  getTreatmentById
-);
-
-// Update treatment (medical staff only)
-router.put(
-  "/:id",
-  authorizeRole(["MedicalStaff"]),
-  updateTreatmentById
-);
-
-// Delete treatment (medical staff only)
-router.delete(
-  "/:id",
-  authorizeRole(["MedicalStaff"]),
-  deleteTreatmentById
-);
-
 // Get all treatments
 router.get(
   "/list/all",
@@ -86,6 +65,27 @@ router.get(
   "/date-range",
   authorizeRole(["MedicalStaff", "Admin"]),
   getTreatmentsByDate
+);
+
+// Get treatment by ID
+router.get(
+  "/:id",
+  authorizeRole(["MedicalStaff", "Admin", "Patient"]),
+  getTreatmentById
+);
+
+// Update treatment (medical staff only)
+router.put(
+  "/:id",
+  authorizeRole(["MedicalStaff"]),
+  updateTreatmentById
+);
+
+// Delete treatment (medical staff only)
+router.delete(
+  "/:id",
+  authorizeRole(["MedicalStaff"]),
+  deleteTreatmentById
 );
 
 export default router;

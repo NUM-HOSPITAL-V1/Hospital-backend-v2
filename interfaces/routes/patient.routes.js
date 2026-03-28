@@ -21,6 +21,20 @@ router.get(
 );
 
 router.get(
+  "/examinations",
+  authenticateJWT,
+  authorizeRole(["Patient"]),
+  getOwnExaminations
+);
+
+router.get(
+  "/profile",
+  authenticateJWT,
+  authorizeRole(["Patient"]),
+  getOwnProfile
+);
+
+router.get(
   "/:id",
   authenticateJWT,
   authorizeRole(["Admin", "MedicalStaff"]),
@@ -39,20 +53,6 @@ router.delete(
   authenticateJWT,
   authorizeRole(["Admin", "MedicalStaff"]),
   deletePatientById
-);
-
-router.get(
-  "/examinations",
-  authenticateJWT,
-  authorizeRole(["Patient"]),
-  getOwnExaminations
-);
-
-router.get(
-  "/profile",
-  authenticateJWT,
-  authorizeRole(["Patient"]),
-  getOwnProfile
 );
 
 

@@ -5,6 +5,7 @@ const {
   getExamination,
   updateExamination,
   removeExamination,
+  getAllExaminations,
   getPatientExaminations,
   getMedicalStaffExaminations,
 } = createExaminationUseCases();
@@ -21,6 +22,10 @@ export const createExamination = async (req, res) => {
       ...req.body,
       medicalStaff: req.user.id,
     };
+
+    if (examinationData.exam_date && typeof examinationData.exam_date === "string") {
+      examinationData.exam_date = new Date(examinationData.exam_date);
+    }
 
     const validatedData = examinationSchema.parse(examinationData);
 
@@ -54,6 +59,21 @@ export const getMedicalStaffExamHistory = async (req, res) => {
   }
 };
 
+export const getAllExaminationList = async (req, res) => {
+  try {
+    const filters = req.query;
+    const examinations = await getAllExaminations(filters);
+
+    return res.status(200).json({
+      success: true,
+      count: examinations.length,
+      data: examinations,
+    });
+  } catch (error) {
+    return handleZodOrAppError(res, error);
+  }
+};
+
 export const getExaminationById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -76,6 +96,10 @@ export const updateExaminationById = async (req, res) => {
       ...req.body,
       staffId: req.user.id,
     };
+
+    if (updateData.exam_date && typeof updateData.exam_date === "string") {
+      updateData.exam_date = new Date(updateData.exam_date);
+    }
 
     const validatedData = examinationUpdateSchema.parse(updateData);
 

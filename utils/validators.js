@@ -63,7 +63,11 @@ export const patientUpdateSchema = z.object({
 export const examinationSchema = z.object({
   medicalStaff: z.string(),
   patient: z.string(),
-  exam_date: z.date().optional(),
+  exam_date: z.preprocess((arg) => {
+    return typeof arg === "string" || arg instanceof Date
+      ? new Date(arg)
+      : undefined;
+  }, z.date()).optional(),
   doctors_examination: z.enum([
     "Initial",
     "Follow-up",
@@ -80,11 +84,16 @@ export const examinationSchema = z.object({
   sendToHigherLevel: z.boolean().optional(),
   isVioleted: z.boolean().optional(),
   sickDays: z.number().int().min(0).optional(),
+  status: z.enum(["Ongoing", "Done", "Todo"]).optional(),
 });
 
 export const examinationUpdateSchema = z.object({
   staffId: z.string(), // Used for checking permission, will be removed before updating
-  exam_date: z.date().optional(),
+  exam_date: z.preprocess((arg) => {
+    return typeof arg === "string" || arg instanceof Date
+      ? new Date(arg)
+      : undefined;
+  }, z.date()).optional(),
   doctors_examination: z
     .enum([
       "Initial",
@@ -103,6 +112,7 @@ export const examinationUpdateSchema = z.object({
   sendToHigherLevel: z.boolean().optional(),
   isVioleted: z.boolean().optional(),
   sickDays: z.number().int().min(0).optional(),
+  status: z.enum(["Ongoing", "Done", "Todo"]).optional(),
 });
 
 //allergy
@@ -315,6 +325,17 @@ export const medicineSchema = z.object({
         ? new Date(arg)
         : undefined;
     }, z.date()),
+  category: z.string().optional(),
+  subCategory: z.string().optional(),
+  form: z.string().optional(),
+  manufacturer: z.string().optional(),
+  supplier: z.string().optional(),
+  batchNumber: z.string().optional(),
+  location: z.string().optional(),
+  unit: z.string().optional(),
+  reorderLevel: z.number().int().min(0).optional(),
+  status: z.string().optional(),
+  description: z.string().optional(),
   medicalStaff: z.string().min(1, "Эмч/Сувилагчийн ID оруулна уу"),
   // med_id is auto-generated, so don't include it in validation
 });
@@ -330,9 +351,20 @@ export const medicineUpdateSchema = z.object({
     .preprocess((arg) => {
       return typeof arg === "string" || arg instanceof Date
         ? new Date(arg)
-        : undefined;
+      : undefined;
     }, z.date())
     .optional(),
+  category: z.string().optional(),
+  subCategory: z.string().optional(),
+  form: z.string().optional(),
+  manufacturer: z.string().optional(),
+  supplier: z.string().optional(),
+  batchNumber: z.string().optional(),
+  location: z.string().optional(),
+  unit: z.string().optional(),
+  reorderLevel: z.number().int().min(0).optional(),
+  status: z.string().optional(),
+  description: z.string().optional(),
   // med_id should not be updatable
 });
 
@@ -358,7 +390,24 @@ export const treatmentSchema = z.object({
       ? new Date(arg)
       : undefined;
   }, z.date()).optional(),
-  treatmentType: z.enum(["Uvch", "Bumba", "Sharlaga", "Dusal", "Taria"]),
+  treatmentType: z.enum([
+    "Uvch",
+    "Dusal Taria",
+    "Sudas Taria",
+    "Bulchin Taria",
+    "Arisan dotor taria",
+    "Arisan dor taria",
+    "Massajnii sandal",
+    "Ulaan gerel",
+    "Ulitrazvuk",
+    "Lazer",
+    "Biotens",
+    "Limfodrenajnii massaj",
+    "Electroforez",
+    "Bichil hanuur",
+    "Huchilturugch",
+    "Mes zasliin boolt",
+  ]),
   diagnosisType: z.enum(["in", "out"]),
   totalQuantity: z.number().int().min(1, "Нийт эмчилгээний тоо 1-ээс их байх ёстой"),
   sessionsCompleted: z.number().int().min(0, "Хийгдсэн эмчилгээний тоо 0-ээс их байх ёстой").optional(),
@@ -374,7 +423,24 @@ export const treatmentUpdateSchema = z.object({
       ? new Date(arg)
       : undefined;
   }, z.date()).optional(),
-  treatmentType: z.enum(["Uvch", "Bumba", "Sharlaga", "Dusal", "Taria"]).optional(),
+  treatmentType: z.enum([
+    "Uvch",
+    "Dusal Taria",
+    "Sudas Taria",
+    "Bulchin Taria",
+    "Arisan dotor taria",
+    "Arisan dor taria",
+    "Massajnii sandal",
+    "Ulaan gerel",
+    "Ulitrazvuk",
+    "Lazer",
+    "Biotens",
+    "Limfodrenajnii massaj",
+    "Electroforez",
+    "Bichil hanuur",
+    "Huchilturugch",
+    "Mes zasliin boolt",
+  ]).optional(),
   diagnosisType: z.enum(["in", "out"]).optional(),
   totalQuantity: z.number().int().min(1, "Нийт эмчилгээний тоо 1-ээс их байх ёстой").optional(),
   sessionsCompleted: z.number().int().min(0, "Хийгдсэн эмчилгээний тоо 0-ээс их байх ёстой").optional(),

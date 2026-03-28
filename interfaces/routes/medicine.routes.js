@@ -24,27 +24,6 @@ router.post(
   createMedicine
 );
 
-// Get medicine by ID
-router.get(
-  "/:id",
-  authorizeRole(["MedicalStaff", "Admin"]),
-  getMedicineById
-);
-
-// Update medicine (medical staff only)
-router.put(
-  "/:id",
-  authorizeRole(["MedicalStaff", "Admin"]),
-  updateMedicineById
-);
-
-// Delete medicine (medical staff only)
-router.delete(
-  "/:id",
-  authorizeRole(["MedicalStaff", "Admin"]),
-  deleteMedicineById
-);
-
 // Get all medicines
 router.get(
   "/list/all",
@@ -78,6 +57,27 @@ router.get(
   "/low-stock",
   authorizeRole(["MedicalStaff", "Admin"]),
   getLowStockMedicinesList
+);
+
+// Get medicine by ID
+router.get(
+  "/:id",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  getMedicineById
+);
+
+// Update medicine (medical staff only)
+router.put(
+  "/:id",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  updateMedicineById
+);
+
+// Delete medicine (medical staff only)
+router.delete(
+  "/:id",
+  authorizeRole(["MedicalStaff", "Admin"]),
+  deleteMedicineById
 );
 
 export default router;
