@@ -8,7 +8,7 @@ router.use(authorizeRole(["Admin"]));
 
 router.get("/", MedicalStaffController.list);
 router.get("/:id", MedicalStaffController.get);
-// router.post("/", MedicalStaffController.create);
+router.post("/", MedicalStaffController.create);
 router.put("/:id", MedicalStaffController.update);
 router.delete("/:id", MedicalStaffController.delete);
 

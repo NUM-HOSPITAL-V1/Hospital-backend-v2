@@ -74,10 +74,10 @@ router.get(
   getTreatmentById
 );
 
-// Update treatment (medical staff only)
+// Update treatment (medical staff and admin)
 router.put(
   "/:id",
-  authorizeRole(["MedicalStaff"]),
+  authorizeRole(["MedicalStaff", "Admin"]),
   updateTreatmentById
 );
 

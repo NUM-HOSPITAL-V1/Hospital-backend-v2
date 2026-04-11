@@ -9,8 +9,18 @@ import {
  
 } from "../controller/prescription.controller.js";
 import { authenticateJWT, authorizeRole } from "../middleware/auth.js";
-import { getMyPrescribedMeds, getPrescribedMedById, getPrescriptionMedsList } from "../controller/prescribeMed.controller.js";
-import { getMyPrescribedGuides, getPrescribedGuideById, getPrescriptionGuidesList } from "../controller/prescribedGuide.controller.js";
+import {
+  createPrescribedMed,
+  getMyPrescribedMeds,
+  getPrescribedMedById,
+  getPrescriptionMedsList
+} from "../controller/prescribeMed.controller.js";
+import {
+  createPrescribedGuide,
+  getMyPrescribedGuides,
+  getPrescribedGuideById,
+  getPrescriptionGuidesList
+} from "../controller/prescribedGuide.controller.js";
 
 const router = express.Router();
 
@@ -59,6 +69,18 @@ router.get(
   "/my-prescriptions",
   authorizeRole(["MedicalStaff","Patient"]),
   getMyPrescriptions
+);
+
+router.post(
+  "/medication",
+  authorizeRole(["MedicalStaff"]),
+  createPrescribedMed
+);
+
+router.post(
+  "/guide",
+  authorizeRole(["MedicalStaff"]),
+  createPrescribedGuide
 );
 //===================== PATIENT MEDICATIONS =====================
 // Get all medications for the logged-in patient

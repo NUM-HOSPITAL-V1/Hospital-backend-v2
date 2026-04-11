@@ -118,9 +118,12 @@ export const updateExaminationById = async (req, res) => {
 export const deleteExaminationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const staffId = req.user.id;
+    const currentUser = {
+      id: req.user.id,
+      role: req.user.role,
+    };
 
-    const result = await removeExamination(id, staffId);
+    const result = await removeExamination(id, currentUser);
 
     return res.status(200).json(result);
   } catch (error) {

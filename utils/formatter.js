@@ -11,6 +11,7 @@ export const toPublicUser = (doc) => {
 export const toPublicPatient = (doc) => {
   return {
     id: doc._id,
+    _id: doc._id,
     firstname: doc.firstname,
     lastname: doc.lastname,
     email: doc.email,
@@ -24,7 +25,9 @@ export const toPublicPatient = (doc) => {
     sisiID:doc.sisiID,
     occupation:doc.occupation,
     education:doc.education,
-    gender:doc.gender
+    gender:doc.gender,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   };
 };
 export const toPublicMedStaff = (doc) => {

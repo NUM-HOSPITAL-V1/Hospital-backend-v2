@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 import User from "./User.model.js";
 
 const MedicalStaffSchema = new Schema({
-  position: { type: String, enum: ["Doctor", "Nurse"] },
+  position: { type: String },
   specialization: { type: String },
 });
 

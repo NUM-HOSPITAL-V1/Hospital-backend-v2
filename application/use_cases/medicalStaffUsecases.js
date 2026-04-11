@@ -20,9 +20,8 @@ export const createMedicalStaffUseCases = () => {
   };
 
   const addStaff = async (data) => {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-      return await createMedicalStaff({ ...data, password: hashedPassword });
-    
+    const passwordHash = await bcrypt.hash(data.password, 10);
+    return await createMedicalStaff({ ...data, password_hash: passwordHash });
   };
 
   const updateStaff = async (id, updateData) => {

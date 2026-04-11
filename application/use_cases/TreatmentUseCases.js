@@ -10,6 +10,7 @@ import {
     listTreatmentsByType,
     listTreatmentsByDateRange
   } from "../../infrastructure/repositories/treatmentRepository.js";
+  import { findMedicalStaffById } from "../../infrastructure/repositories/medicalStaffRepository.js";
   import { createError } from "../../utils/error.js";
   
   // TREATMENT
@@ -37,18 +38,44 @@ import {
       if (!treatment) {
         throw createError("Эмчилгээний мэдээлэл олдсонгүй!", 404);
       }
-  
-      // Check if staff can update this treatment
-      if (
+
+      const requesterRole = updateData.requesterRole;
+      let requester = null;
+      if (updateData.staffId && requesterRole === "MedicalStaff") {
+        requester = await findMedicalStaffById(updateData.staffId);
+        if (!requester) {
+          throw createError("Ажилтны мэдээлэл олдсонгүй!", 404);
+        }
+      }
+
+      const isAdmin = requesterRole === "Admin";
+      const isOwner =
         updateData.staffId &&
-        treatment.medicalStaff._id.toString() !== updateData.staffId
-      ) {
+        treatment.medicalStaff._id.toString() === updateData.staffId;
+
+      const isNurseProgressUpdate =
+        requester?.position === "Nurse" &&
+        Object.keys(updateData).every((key) => ["staffId", "requesterRole", "sessionsCompleted"].includes(key));
+
+      // Admin can update any treatment. Owners can edit their own treatment.
+      // Nurses can only update execution progress.
+      if (updateData.staffId && !isAdmin && !isOwner && !isNurseProgressUpdate) {
         throw createError("Зөвхөн өөрийн бичсэн эмчилгээний мэдээллийг засах боломжтой!", 403);
       }
-  
-      // Remove staffId from update data as it's not a field in the model
+
+      if (
+        typeof updateData.sessionsCompleted === "number" &&
+        typeof treatment.totalQuantity === "number" &&
+        updateData.sessionsCompleted > treatment.totalQuantity
+      ) {
+        throw createError("Хийгдсэн эмчилгээний тоо нийт тооноос их байж болохгүй!", 400);
+      }
+
       if (updateData.staffId) {
         delete updateData.staffId;
+      }
+      if (updateData.requesterRole) {
+        delete updateData.requesterRole;
       }
   
       const updatedTreatment = await updateTreatmentById(id, updateData);

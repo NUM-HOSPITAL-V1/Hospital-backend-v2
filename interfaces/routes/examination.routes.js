@@ -70,7 +70,7 @@ router.put(
 
 router.delete(
   "/:id",
-  authorizeRole(["MedicalStaff"]),
+  authorizeRole(["MedicalStaff", "Admin"]),
   deleteExaminationById
 );
 

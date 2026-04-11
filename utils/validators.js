@@ -264,14 +264,24 @@ export const diagnosisUpdateSchema = z.object({
 });
 
 export const prescriptionSchema = z.object({
-  date: z.date().optional(),
+  date: z.preprocess((arg) => {
+    return typeof arg === "string" || arg instanceof Date
+      ? new Date(arg)
+      : undefined;
+  }, z.date()).optional(),
   prescribedBy: z.string().min(1, "Эмч/Сувилагчийн ID оруулна уу"),
   patient: z.string().min(1, "Өвчтөний ID оруулна уу"),
+  examination_id: z.string().optional(),
 });
 
 export const prescriptionUpdateSchema = z.object({
   staffId: z.string().optional(), // Used for verification, not for storing
-  date: z.date().optional(),
+  date: z.preprocess((arg) => {
+    return typeof arg === "string" || arg instanceof Date
+      ? new Date(arg)
+      : undefined;
+  }, z.date()).optional(),
+  examination_id: z.string().optional(),
 });
 
 export const prescribedMedSchema = z.object({
@@ -418,6 +428,7 @@ export const treatmentSchema = z.object({
 
 export const treatmentUpdateSchema = z.object({
   staffId: z.string().optional(), // Used for verification, not for storing
+  requesterRole: z.string().optional(),
   date: z.preprocess((arg) => {
     return typeof arg === "string" || arg instanceof Date
       ? new Date(arg)

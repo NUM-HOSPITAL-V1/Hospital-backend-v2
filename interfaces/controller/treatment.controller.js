@@ -92,10 +92,10 @@ import {
     try {
       const { id } = req.params;
   
-      // Add staff ID for verification that they own this treatment
       const updateData = {
         ...req.body,
         staffId: req.user.id,
+        requesterRole: req.user.role,
       };
   
       // Parse date if it's a string

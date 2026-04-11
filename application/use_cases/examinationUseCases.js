@@ -56,14 +56,20 @@ export const createExaminationUseCases = () => {
     return updatedExamination;
   };
 
-  const removeExamination = async (id, staffId) => {
+  const removeExamination = async (id, currentUser) => {
     const examination = await findExaminationById(id);
     if (!examination) {
       throw createError("Үзлэгийн мэдээлэл олдсонгүй!", 404);
     }
 
-    // Ensure staff can only delete their own examinations
-    if (examination.medicalStaff.id.toString() !== staffId) {
+    const staffId = currentUser?.id;
+    const userRole = currentUser?.role;
+    const examinationStaffId = examination.medicalStaff?._id?.toString()
+      || examination.medicalStaff?.id?.toString()
+      || examination.medicalStaff?.toString();
+
+    // Admin can delete any examination. Medical staff can only delete their own.
+    if (userRole !== "Admin" && examinationStaffId !== staffId) {
       throw createError(
         "Зөвхөн өөрийн бүртгэсэн үзлэгийг устгах боломжтой!",
         403
