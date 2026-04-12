@@ -64,7 +64,7 @@ router.get(
 );
 
 router.get(
-  "/vitalsigns/my/recorded",
+  "/vitalsigns/my/recorded-by-staff",
   authorizeRole(["MedicalStaff"]),
   getMyVitalSignsByStaff
 );
