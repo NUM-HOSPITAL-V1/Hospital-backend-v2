@@ -106,6 +106,10 @@ export const signUpNurse = async (req, res) => {
   }
 };
 
+export const validateAccessToken = async (req, res) => {
+  return res.status(204).end();
+};
+
 // Common Error Handler
 const handleZodOrAppError = (res, error, fallbackStatus = 400) => {
   if (error.name === "ZodError") {
