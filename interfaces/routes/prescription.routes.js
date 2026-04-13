@@ -92,7 +92,7 @@ router.get("/medication/:id", authorizeRole(["Patient"]), getPrescribedMedById);
 // Get all medications for a specific prescription
 router.get(
   "/prescription/:prescriptionId/medications",
-  authorizeRole(["Patient"]),
+  authorizeRole(["MedicalStaff", "Admin", "Patient"]),
   getPrescriptionMedsList
 );
 
@@ -106,7 +106,7 @@ router.get("/guide/:id", authorizeRole(["Patient"]), getPrescribedGuideById);
 // Get all guides for a specific prescription
 router.get(
   "/prescription/:prescriptionId/guides",
-  authorizeRole(["Patient"]),
+  authorizeRole(["MedicalStaff", "Admin", "Patient"]),
   getPrescriptionGuidesList
 );
 

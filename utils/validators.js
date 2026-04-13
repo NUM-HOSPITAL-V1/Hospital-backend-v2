@@ -420,6 +420,8 @@ export const treatmentSchema = z.object({
   ]),
   diagnosisType: z.enum(["in", "out"]),
   totalQuantity: z.number().int().min(1, "Нийт эмчилгээний тоо 1-ээс их байх ёстой"),
+  frequency: z.string().min(1, "Давтамж оруулна уу").optional(),
+  treatmentDays: z.number().int().min(1, "Өдрийн тоо 1-ээс их байх ёстой").optional(),
   sessionsCompleted: z.number().int().min(0, "Хийгдсэн эмчилгээний тоо 0-ээс их байх ёстой").optional(),
   examination_id: z.string().optional(),
   patient: z.string().min(1, "Өвчтөний ID оруулна уу"),
@@ -454,6 +456,8 @@ export const treatmentUpdateSchema = z.object({
   ]).optional(),
   diagnosisType: z.enum(["in", "out"]).optional(),
   totalQuantity: z.number().int().min(1, "Нийт эмчилгээний тоо 1-ээс их байх ёстой").optional(),
+  frequency: z.string().min(1, "Давтамж оруулна уу").optional(),
+  treatmentDays: z.number().int().min(1, "Өдрийн тоо 1-ээс их байх ёстой").optional(),
   sessionsCompleted: z.number().int().min(0, "Хийгдсэн эмчилгээний тоо 0-ээс их байх ёстой").optional(),
   examination_id: z.string().optional(),
 });

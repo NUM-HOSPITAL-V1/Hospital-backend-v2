@@ -47,6 +47,15 @@ import {
       if (treatmentData.date && typeof treatmentData.date === "string") {
         treatmentData.date = new Date(treatmentData.date);
       }
+      if (typeof treatmentData.totalQuantity === "string") {
+        treatmentData.totalQuantity = Number(treatmentData.totalQuantity);
+      }
+      if (typeof treatmentData.treatmentDays === "string") {
+        treatmentData.treatmentDays = Number(treatmentData.treatmentDays);
+      }
+      if (typeof treatmentData.sessionsCompleted === "string") {
+        treatmentData.sessionsCompleted = Number(treatmentData.sessionsCompleted);
+      }
   
       // Validate input
       const validatedData = treatmentSchema.parse(treatmentData);
@@ -101,6 +110,15 @@ import {
       // Parse date if it's a string
       if (updateData.date && typeof updateData.date === "string") {
         updateData.date = new Date(updateData.date);
+      }
+      if (typeof updateData.totalQuantity === "string") {
+        updateData.totalQuantity = Number(updateData.totalQuantity);
+      }
+      if (typeof updateData.treatmentDays === "string") {
+        updateData.treatmentDays = Number(updateData.treatmentDays);
+      }
+      if (typeof updateData.sessionsCompleted === "string") {
+        updateData.sessionsCompleted = Number(updateData.sessionsCompleted);
       }
   
       // Validate update data

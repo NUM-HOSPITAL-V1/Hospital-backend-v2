@@ -13,6 +13,8 @@ const TreatmentSchema = new Schema(
     },
     diagnosisType: { type: String, enum: ["in", "out"] },
     totalQuantity: { type: Number },
+    frequency: { type: String },
+    treatmentDays: { type: Number },
     sessionsCompleted: { type: Number },
     examination_id: { type: Schema.Types.ObjectId, ref: "Examination" },
     patient: { type: Schema.Types.ObjectId, ref: "Patient" },

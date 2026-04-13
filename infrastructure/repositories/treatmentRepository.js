@@ -7,7 +7,7 @@ export const createTreatment = async (treatmentData) => {
 
 export const findTreatmentById = async (id) => {
   return await Treatment.findById(id)
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .populate("medicalStaff", "firstname lastname position specialization");
 };
@@ -17,7 +17,7 @@ export const updateTreatmentById = async (id, updateData) => {
     new: true,
     runValidators: true,
   })
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .populate("medicalStaff", "firstname lastname position specialization");
 };
@@ -28,7 +28,7 @@ export const deleteTreatmentById = async (id) => {
 
 export const listAllTreatments = async () => {
   return await Treatment.find()
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .populate("medicalStaff", "firstname lastname position specialization")
     .sort({ date: -1 }); // Sort by date, most recent first
@@ -36,14 +36,14 @@ export const listAllTreatments = async () => {
 
 export const listPatientTreatments = async (patientId) => {
   return await Treatment.find({ patient: patientId })
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("medicalStaff", "firstname lastname position specialization")
     .sort({ date: -1 }); // Sort by date, most recent first
 };
 
 export const listMedicalStaffTreatments = async (staffId) => {
   return await Treatment.find({ medicalStaff: staffId })
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .sort({ date: -1 }); // Sort by date, most recent first
 };
@@ -57,7 +57,7 @@ export const listTreatmentsByExamination = async (examinationId) => {
 
 export const listTreatmentsByType = async (treatmentType) => {
   return await Treatment.find({ treatmentType })
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .populate("medicalStaff", "firstname lastname position specialization")
     .sort({ date: -1 });
@@ -70,7 +70,7 @@ export const listTreatmentsByDateRange = async (startDate, endDate) => {
       $lte: new Date(endDate)
     }
   })
-    .populate("examination_id", "exam_date doctors_examination exam_type")
+    .populate("examination_id", "exam_date doctors_examination exam_type surgery illness reason status")
     .populate("patient", "firstname lastname register sisiID")
     .populate("medicalStaff", "firstname lastname position specialization")
     .sort({ date: -1 });
