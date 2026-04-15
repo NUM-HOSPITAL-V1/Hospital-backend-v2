@@ -1,6 +1,7 @@
 export const toPublicUser = (doc) => {
   return {
     id: doc._id,
+    _id: doc._id,
     firstname: doc.firstname,
     lastname: doc.lastname,
     email: doc.email,
@@ -17,6 +18,7 @@ export const toPublicPatient = (doc) => {
     email: doc.email,
     phoneNumber: doc.phoneNumber,
     role:doc.role, //tur
+    customerId: doc.customerId,
     birthOfDate:doc.birthOfDate,
     type:doc.type,
     register:doc.register,

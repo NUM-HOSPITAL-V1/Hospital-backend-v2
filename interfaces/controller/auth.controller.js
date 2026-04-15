@@ -4,6 +4,7 @@ import {
   patientSignupSchema,
 } from "../../utils/validators.js";
 import { toPublicMedStaff, toPublicPatient, toPublicUser } from "../../utils/formatter.js";
+import { hydratePatientFromCustomerOwnership } from "../../application/services/patientProfileProjection.service.js";
 import { createUserUseCases } from "../../application/use_cases/authUseCases.js";
 const { registerPatient, registerAdmin, registerDoctor, registerNurse, login } =
   createUserUseCases();
@@ -24,7 +25,8 @@ export const signUp = async (req, res) => {
   try {
     const input = patientSignupSchema.parse(req.body);
     const { accessToken, refreshToken, patient } = await registerPatient(input);
-    const publicPatient = toPublicUser(patient);
+    const hydratedPatient = await hydratePatientFromCustomerOwnership(patient);
+    const publicPatient = toPublicUser(hydratedPatient);
     return sendTokenResponse(
       res,
       refreshToken,
@@ -39,13 +41,15 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   try {
     const { accessToken, refreshToken, user } = await login(req.body);
+    const hydratedUser =
+      user?.role === "Patient" ? await hydratePatientFromCustomerOwnership(user) : user;
     // role oos n hamaarch different medeelel yvuulah bol iimerhu oruulj bolno toPublicAdmin ntr gedg ch yumu
     const publicUser =
-      user?.role === "Admin"
-        ? toPublicUser(user)
-        : user?.role === "Patient"
-        ? toPublicPatient(user)
-        : toPublicMedStaff(user);
+      hydratedUser?.role === "Admin"
+        ? toPublicUser(hydratedUser)
+        : hydratedUser?.role === "Patient"
+        ? toPublicPatient(hydratedUser)
+        : toPublicMedStaff(hydratedUser);
 
     return sendTokenResponse(
       res,

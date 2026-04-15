@@ -1,5 +1,9 @@
 import { createPatientUseCases } from "../../application/use_cases/patientUseCases.js";
 import { createExaminationUseCases } from "../../application/use_cases/examinationUseCases.js";
+import {
+  hydratePatientFromCustomerOwnership,
+  hydratePatientsFromCustomerOwnership,
+} from "../../application/services/patientProfileProjection.service.js";
 import { toPublicPatient } from "../../utils/formatter.js";
 import { createError } from "../../utils/error.js";
 import { patientUpdateSchema } from "../../utils/validators.js";
@@ -19,7 +23,8 @@ export const listAllPatients = async (req, res) => {
   try {
     const filters = req.query || {};
     const patients = await listPatients(filters);
-    const safePatients = patients.map(toPublicPatient);
+    const hydratedPatients = await hydratePatientsFromCustomerOwnership(patients);
+    const safePatients = hydratedPatients.map(toPublicPatient);
     
     res.status(200).json({
       message: "Read successfully!",
@@ -39,7 +44,8 @@ export const getPatientById = async (req, res) => {
   try {
     const { id } = req.params;
     const patient = await getPatient(id);
-    const safePatient = toPublicPatient(patient);
+    const hydratedPatient = await hydratePatientFromCustomerOwnership(patient);
+    const safePatient = toPublicPatient(hydratedPatient);
     
     res.status(200).json({
       message: "Success",
@@ -113,9 +119,10 @@ export const getOwnProfile = async (req, res) => {
     if (!patient) {
       return res.status(404).json({ error: "Patient not found" });
     }
+    const hydratedPatient = await hydratePatientFromCustomerOwnership(patient);
     return res.status(200).json({
       success: true,
-      patient: toPublicPatient(patient),
+      patient: toPublicPatient(hydratedPatient),
     });
   } catch (error) {
     console.error("Error fetching own profile:", error);

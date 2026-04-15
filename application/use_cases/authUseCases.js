@@ -5,6 +5,13 @@ import {
   createMedicalStaff,
   createPatient,
 } from "../../infrastructure/repositories/authRepository.js";
+import {
+  createCustomerProfile,
+  deleteCustomerProfile,
+  isCustomerRegistrationEnabled,
+} from "../../infrastructure/clients/customerRegistrationClient.js";
+import { getCustomerById as getCustomerProfileById } from "../../infrastructure/clients/customerServiceClient.js";
+import { mapCustomerProfileToPatientShadow } from "../services/customerOwnership.service.js";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
 import { createError } from "../../utils/error.js";
 
@@ -172,29 +179,80 @@ export const createUserUseCases = () => {
     if (existingUser) throw createError("Имэйл бүртгэгдсэн байна!", 409);
 
     const hashedPassword = await hashPassword(password);
+    let customerProfile = null;
+    let customerProfileDetails = null;
 
-    const patient = await createPatient({
-      firstname,
-      lastname,
-      email: normalizedEmail,
-      phoneNumber,
-      password_hash: hashedPassword, // ✅
-      type,
-      register,
-      address,
-      sisiID,
-      occupation,
-      education,
-      school,
-      birthOfDate,
-      gender,
-    });
+    try {
+      if (isCustomerRegistrationEnabled()) {
+        customerProfile = await createCustomerProfile({
+          firstname,
+          lastname,
+          register,
+          phoneNumber,
+          email: normalizedEmail,
+          address,
+          occupation,
+          birthOfDate,
+          gender,
+          type,
+          sisiID,
+        });
 
-    const payload = { id: patient._id, role: patient.role };
-    const accessToken = generateAccessToken(payload);
-    const refreshToken = generateRefreshToken(payload);
+        if (customerProfile?.customerId) {
+          customerProfileDetails = await getCustomerProfileById(customerProfile.customerId);
+        }
+      }
 
-    return { accessToken, refreshToken, patient };
+      const patientShadow = mapCustomerProfileToPatientShadow(customerProfileDetails || {}, {
+        firstname,
+        lastname,
+        email: normalizedEmail,
+        phoneNumber,
+        customerId: customerProfile?.customerId,
+        register,
+        address,
+        occupation,
+        birthOfDate,
+        gender,
+        type,
+        sisiID,
+        school,
+        education,
+      });
+
+      const patient = await createPatient({
+        firstname: patientShadow.firstname,
+        lastname: patientShadow.lastname,
+        email: patientShadow.email,
+        phoneNumber: patientShadow.phoneNumber,
+        password_hash: hashedPassword, // ✅
+        type: patientShadow.type,
+        register: patientShadow.register,
+        address: patientShadow.address,
+        sisiID: patientShadow.sisiID,
+        occupation: patientShadow.occupation,
+        education: patientShadow.education,
+        school: patientShadow.school,
+        birthOfDate: patientShadow.birthOfDate,
+        gender: patientShadow.gender,
+        customerId: patientShadow.customerId,
+      });
+
+      const payload = { id: patient._id, role: patient.role };
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+
+      return { accessToken, refreshToken, patient };
+    } catch (error) {
+      if (customerProfile?.customerId) {
+        try {
+          await deleteCustomerProfile(customerProfile.customerId);
+        } catch (rollbackError) {
+          console.error("Failed to rollback customer profile:", rollbackError.message);
+        }
+      }
+      throw error;
+    }
   };
 
   return {

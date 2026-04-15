@@ -7,6 +7,7 @@ import { performance } from 'perf_hooks';
 import bodyParser from "body-parser";
 import AuthRouter from "./interfaces/routes/auth.routes.js";
 import PatientRouter from "./interfaces/routes/patient.routes.js";
+import CustomerRouter from "./interfaces/routes/customer.routes.js";
 import HealthRouter from "./interfaces/routes/health.routes.js";
 import MedicalStaffRouter from "./interfaces/routes/medicalstaff.routes.js";
 import ExaminationRouter from "./interfaces/routes/examination.routes.js";
@@ -57,6 +58,7 @@ app.get("/api/status", (req, res) =>
   res.send("OK"));
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/customer", CustomerRouter);
 app.use("/api/allergy", AllergyRouter);
 app.use("/api/patient", PatientRouter);
 app.use("/api", HealthRouter);

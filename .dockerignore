@@ -1,0 +1,8 @@
+.git
+.github
+.vscode
+node_modules
+npm-debug.log*
+.DS_Store
+README.md
+PROJECT_SETUP_AND_CICD_GUIDE.md
