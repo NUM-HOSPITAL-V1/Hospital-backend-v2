@@ -20,8 +20,10 @@ export const createMedicalStaffUseCases = () => {
   };
 
   const addStaff = async (data) => {
+    const normalizedEmail = typeof data.email === "string" ? data.email.trim().toLowerCase() : data.email;
     const passwordHash = await bcrypt.hash(data.password, 10);
-    return await createMedicalStaff({ ...data, password_hash: passwordHash });
+    const { password, ...rest } = data;
+    return await createMedicalStaff({ ...rest, email: normalizedEmail, password_hash: passwordHash });
   };
 
   const updateStaff = async (id, updateData) => {
