@@ -404,6 +404,7 @@ export const treatmentSchema = z.object({
   }, z.date()).optional(),
   treatmentType: z.enum([
     "Uvch",
+    "Emchilgee",
     "Dusal Taria",
     "Sudas Taria",
     "Bulchin Taria",
@@ -440,6 +441,7 @@ export const treatmentUpdateSchema = z.object({
   }, z.date()).optional(),
   treatmentType: z.enum([
     "Uvch",
+    "Emchilgee",
     "Dusal Taria",
     "Sudas Taria",
     "Bulchin Taria",

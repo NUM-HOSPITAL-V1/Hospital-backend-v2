@@ -5,7 +5,7 @@ const TreatmentSchema = new Schema(
     date: { type: Date },
     treatmentType: {
       type: String,
-      enum: ["Uvch", "Dusal Taria", "Sudas Taria",
+      enum: ["Uvch", "Emchilgee", "Dusal Taria", "Sudas Taria",
        "Bulchin Taria", "Arisan dotor taria","Arisan dor taria",
        "Massajnii sandal","Ulaan gerel","Ulitrazvuk","Lazer",
       "Biotens","Limfodrenajnii massaj","Electroforez",
