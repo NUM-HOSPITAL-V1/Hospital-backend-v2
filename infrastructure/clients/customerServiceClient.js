@@ -43,6 +43,10 @@ const requestJson = async (path, options = {}) => {
 
 export const isCustomerServiceEnabled = () => Boolean(CUSTOMER_REGISTRATION_BASE_URL);
 
+// Vert.x JsonObject Spring/Jackson-аар serialize хийхэд {"map": {...}, "empty": false}
+// формат болдог. Энэ функц тэр wrapper-ийг задлана.
+const unwrap = (value) => (value && typeof value === "object" && "map" in value ? value.map : value);
+
 export const listCustomers = async () => {
   const payload = await requestJson("/customer/registration/fetch", {
     method: "GET",
@@ -51,16 +55,21 @@ export const listCustomers = async () => {
     },
   });
 
-  return Array.isArray(payload?.body) ? payload.body : [];
+  const body = unwrap(payload);
+  const inner = unwrap(body?.body);
+  const list = inner?.list ?? body?.body;
+  return Array.isArray(list) ? list.map(unwrap) : [];
 };
 
 export const getCustomerById = async (customerId) => {
-  return requestJson(`/customer/registration/fetch/${encodeURIComponent(customerId)}`, {
+  const result = await requestJson(`/customer/registration/fetch/${encodeURIComponent(customerId)}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
     },
   });
+
+  return unwrap(result);
 };
 
 export const searchCustomers = async (query) => {
@@ -73,7 +82,10 @@ export const searchCustomers = async (query) => {
     body: query,
   });
 
-  return Array.isArray(payload?.body) ? payload.body : [];
+  const body = unwrap(payload);
+  const inner = unwrap(body?.body);
+  const list = inner?.list ?? body?.body;
+  return Array.isArray(list) ? list.map(unwrap) : [];
 };
 
 export const updateCustomerById = async (customerId, payload) => {
