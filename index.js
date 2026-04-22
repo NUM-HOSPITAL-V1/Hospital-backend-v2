@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { performance } from 'perf_hooks';
 import bodyParser from "body-parser";
 import AuthRouter from "./interfaces/routes/auth.routes.js";
@@ -29,6 +30,7 @@ import MedicineUsageRouter from "./interfaces/routes/medicineUsage.routes.js";
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   const start = performance.now();

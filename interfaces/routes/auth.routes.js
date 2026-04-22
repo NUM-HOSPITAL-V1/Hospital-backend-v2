@@ -5,6 +5,7 @@ import {
   signUpNurse,
   signUpAdmin,
   validateAccessToken,
+  refresh,
 } from "../controller/auth.controller.js";
 import express from "express";
 import { authenticateJWT } from "../middleware/auth.js";
@@ -17,5 +18,6 @@ router.post("/signup/doctor", signUpDoctor);
 router.post("/signup/nurse", signUpNurse);
 router.post("/signup/admin", signUpAdmin);
 router.get("/validate", authenticateJWT, validateAccessToken);
+router.post("/refresh", refresh);
 
 export default router;

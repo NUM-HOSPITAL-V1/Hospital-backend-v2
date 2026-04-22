@@ -6,6 +6,7 @@ import {
 import { toPublicMedStaff, toPublicPatient, toPublicUser } from "../../utils/formatter.js";
 import { hydratePatientFromCustomerOwnership } from "../../application/services/patientProfileProjection.service.js";
 import { createUserUseCases } from "../../application/use_cases/authUseCases.js";
+import { generateAccessToken, verifyRefreshToken } from "../../utils/jwt.js";
 const { registerPatient, registerAdmin, registerDoctor, registerNurse, login } =
   createUserUseCases();
 
@@ -112,6 +113,19 @@ export const signUpNurse = async (req, res) => {
 
 export const validateAccessToken = async (req, res) => {
   return res.status(204).end();
+};
+
+export const refresh = (req, res) => {
+  const token = req.cookies?.refreshToken;
+  if (!token) return res.status(401).json({ error: "No refresh token" });
+
+  try {
+    const decoded = verifyRefreshToken(token);
+    const accessToken = generateAccessToken({ id: decoded.id, role: decoded.role });
+    return res.status(200).json({ accessToken });
+  } catch {
+    return res.status(403).json({ error: "Invalid or expired refresh token" });
+  }
 };
 
 // Common Error Handler
