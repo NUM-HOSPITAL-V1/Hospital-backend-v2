@@ -30,7 +30,7 @@ const seedAdmin = async () => {
       firstname: "Admin",
       lastname: "User",
       email: "admin@ex.com",
-      password: hashedPassword,
+      password_hash: hashedPassword,
       phoneNumber: "1234567890",
     });
 
