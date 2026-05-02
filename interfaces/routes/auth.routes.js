@@ -17,7 +17,7 @@ router.post("/signin", signIn);
 router.post("/signup/doctor", signUpDoctor);
 router.post("/signup/nurse", signUpNurse);
 router.post("/signup/admin", signUpAdmin);
-router.get("/validate", authenticateJWT, validateAccessToken);
+router.all("/validate", authenticateJWT, validateAccessToken);
 router.post("/refresh", refresh);
 
 export default router;
